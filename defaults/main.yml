@@ -1,0 +1,41 @@
+---
+icinga2_user: nagios
+icinga2_group: nagios
+icinga2_plugin_dir: /usr/lib/nagios/plugins
+icinga2_manubulon_plugin_dir: /usr/lib/nagios/plugins
+icinga2_contrib_plugin_dir: /usr/lib/nagios/plugins
+icinga2_constants: {}
+
+icinga2_configure_postgres: true
+icinga2_postgres_login_host: localhost
+icinga2_postgres_login_user: postgres
+icinga2_postgres_user: icinga2
+icinga2_postgres_database: icinga2
+
+# Features
+icinga2_features:
+  - checker
+  - command
+  - mainlog
+  - notification
+  - syslog
+icinga2_feature_api_bind: 0.0.0.0
+icinga2_feature_api_port: 5665
+icinga2_feature_api_accept_config: false
+icinga2_feature_api_accept_commands: false
+icinga2_feature_api_tlsmin: TLSv1.2
+icinga2_feature_checker_concurrent: 512
+icinga2_feature_command_path: /var/run/icinga2/cmd/icinga2.cmd
+icinga2_feature_idopgsql_host: localhost
+icinga2_feature_idopgsql_port: 5432
+icinga2_feature_idopgsql_user: icinga2
+icinga2_feature_idopgsql_password: icinga2
+icinga2_feature_idopgsql_database: icinga2
+icinga2_feature_idopgsql_instance_name: default
+icinga2_feature_idopgsql_ha: true
+icinga2_feature_idopgsql_failover_timeout: 60s
+icinga2_feature_idopgsql_cleanup: {}
+icinga2_feature_mainlog_severity: information
+icinga2_feature_mainlog_path: /var/log/icinga2/icinga2.log
+icinga2_feature_notification_ha: true
+icinga2_feature_syslog_severity: information

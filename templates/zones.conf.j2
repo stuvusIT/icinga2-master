@@ -1,0 +1,45 @@
+// {{ ansible_managed }}
+
+// Global templates
+object Zone "global-templates" {
+	global = true
+}
+
+// Client endpoints
+{% for host in hostvars.values() if not icinga2_noagent_group in host.group_names | default([]) and (host.group_names | default([]) | intersect(parent_zones) | length == 0) %}
+object Endpoint "{{ host.inventory_hostname }}" {
+	log_duration = 0
+}
+
+{% endfor -%}
+
+// Client zones
+{% for host in hostvars.values() if not icinga2_noagent_group in host.group_names | default([]) and not host.group_names | intersect(parent_zones) | length > 0 %}
+object Zone "{{ host.inventory_hostname }}" {
+	endpoints = [ "{{ host.inventory_hostname }}" ]
+	parent = "{{ host.icinga2_parent_zone }}"
+}
+
+{% endfor -%}
+
+// Master endpoints
+{% for zonename in parent_zones %}
+{% for host in groups[zonename] %}
+object Endpoint "{{ host }}" {
+	host = "{{ hostvars[host].ansible_host }}"
+}
+
+{% endfor %}
+{% endfor -%}
+
+// Master zones
+{% for zonename in parent_zones %}
+object Zone "{{ zonename }}" {
+	endpoints = [ "{{ groups[zonename] | join('", "') }}" ]
+	{% if hostvars[groups[zonename][0]].icinga2_parent_zone | default(omit) != zonename -%}
+	parent = "{{ hostvars[groups[zonename][0]].icinga2_parent_zone | default(omit) }}"
+	{%- endif %}
+
+}
+
+{% endfor -%}
