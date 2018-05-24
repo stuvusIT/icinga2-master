@@ -37,4 +37,5 @@
     -f /usr/share/icinga2-ido-pgsql/schema/pgsql.sql
   environment:
     PGPASSWORD: "{{ icinga2_postgres_password | default(omit) }}"
+  notify: Restart Icinga 2
   when: ido_imported.rc != 0

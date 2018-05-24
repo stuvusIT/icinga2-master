@@ -21,6 +21,7 @@
     owner: root
     group: "{{ icinga2_group }}"
     mode: 0644
+  notify: Restart Icinga 2
   with_items:
     - constants
     - icinga2
@@ -44,6 +45,7 @@
     owner: root
     group: "{{ icinga2_group }}"
     mode: 0644
+  notify: Restart Icinga 2
   with_items:
     - api
     - checker
@@ -61,6 +63,7 @@
     owner: root
     group: "{{ icinga2_group }}"
     force: true # Because otherwise, Ansible won't symlink directories
+  notify: Restart Icinga 2
   with_items: "{{ icinga2_features }}"
 
 - name: Find features
@@ -73,5 +76,6 @@
   file:
     path: "{{ item.path }}"
     state: absent
+  notify: Restart Icinga 2
   when: "(item.path | basename | splitext)[0] not in icinga2_features"
   with_items: "{{ features.files }}"
