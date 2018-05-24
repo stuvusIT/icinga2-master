@@ -1,0 +1,11 @@
+// {{ ansible_managed }}
+
+object ApiListener "api" {
+	{% if icinga2_feature_api_salt is defined %}ticket_salt = TicketSalt{% endif %}
+
+	bind_host = "{{ icinga2_feature_api_bind }}"
+	bind_port = {{ icinga2_feature_api_port }}
+	accept_config = {{ icinga2_feature_api_accept_config | lower }}
+	accept_commands = {{ icinga2_feature_api_accept_commands | lower }}
+	tls_protocolmin = "{{ icinga2_feature_api_tlsmin }}"
+}

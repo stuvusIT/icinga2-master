@@ -1,0 +1,21 @@
+---
+- name: Create CA
+  command:
+    cmd: icinga2 pki new-ca
+    creates: /var/lib/icinga2/ca/ca.crt
+
+- name: Create CSR
+  command:
+    cmd: icinga2 pki new-cert --cn "{{ inventory_hostname }}" --key "/var/lib/icinga2/certs/{{ inventory_hostname }}.key" --csr "/var/lib/icinga2/certs/{{ inventory_hostname }}.csr"
+    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.csr"
+
+- name: Sign CSR
+  command:
+    cmd: icinga2 pki sign-csr --csr "/var/lib/icinga2/certs/{{ inventory_hostname }}.csr" --cert "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
+    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.csr"
+
+- name: Link CA certificate to proper location
+  file:
+    src: /var/lib/icinga2/ca/ca.crt
+    dest: /var/lib/icinga2/certs/ca.crt
+    state: link

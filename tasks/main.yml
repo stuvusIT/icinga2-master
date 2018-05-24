@@ -1,0 +1,5 @@
+---
+- import_tasks: install.yml
+- import_tasks: certificates.yml
+- import_tasks: configuration.yml
+- import_tasks: database.yml

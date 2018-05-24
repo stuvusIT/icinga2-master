@@ -1,0 +1,81 @@
+---
+- name: Collect parent zones
+  set_fact:
+    parent_zones: "{{ lookup('flattened', groups['all'] | map('extract', hostvars, 'icinga2_parent_zone') | list).split(',') | unique }}"
+
+- name: Create directories for parent zones
+  file:
+    path: "/etc/icinga2/zones.d/{{ item }}"
+    state: directory
+    owner: root
+    group: "{{ icinga2_group }}"
+    mode: 0755
+  with_items:
+    - "{{ parent_zones }}"
+    - global-templates
+
+- name: Create configuration files
+  template:
+    src: "{{ item }}.conf.j2"
+    dest: "/etc/icinga2/{{ item }}.conf"
+    owner: root
+    group: "{{ icinga2_group }}"
+    mode: 0644
+  notify: Restart Icinga 2
+  with_items:
+    - constants
+    - icinga2
+    - init
+    - zones
+
+- name: Remove useless files and directories
+  file:
+    path: "/etc/icinga2/{{ item }}"
+    state: absent
+  with_items:
+    - conf.d
+    - pki
+    - scripts
+    - zones.d/README
+
+- name: Configure features
+  template:
+    src: "features/{{ item }}.conf.j2"
+    dest: "/etc/icinga2/features-available/{{ item }}.conf"
+    owner: root
+    group: "{{ icinga2_group }}"
+    mode: 0644
+  notify: Restart Icinga 2
+  with_items:
+    - api
+    - checker
+    - command
+    - mainlog
+    - ido-pgsql
+    - notification
+    - syslog
+
+- name: Enable features
+  file:
+    src: "../features-available/{{ item }}.conf"
+    dest: "/etc/icinga2/features-enabled/{{ item }}.conf"
+    state: link
+    owner: root
+    group: "{{ icinga2_group }}"
+    force: true # Because otherwise, Ansible won't symlink directories
+  notify: Restart Icinga 2
+  with_items: "{{ icinga2_features }}"
+
+- name: Find features
+  find:
+    paths: /etc/icinga2/features-enabled/
+    file_type: link
+  register: features
+
+- name: Disable features
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  notify: Restart Icinga 2
+  when: "(item.path | basename | splitext)[0] not in icinga2_features"
+  with_items: "{{ features.files }}"

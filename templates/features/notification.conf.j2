@@ -1,0 +1,7 @@
+// {{ ansible_managed }}
+
+library "notification"
+
+object NotificationComponent "notification" {
+	enable_ha = {{ icinga2_feature_notification_ha | lower }}
+}

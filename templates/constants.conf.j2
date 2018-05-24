@@ -1,0 +1,10 @@
+// {{ ansible_managed }}
+
+const NodeName = "{{ inventory_hostname }}"
+{% if icinga2_feature_api_salt is defined %}
+const TicketSalt = "{{ icinga2_feature_api_salt }}"
+{% endif %}
+
+{% for name,value in icinga2_constants.iteritems() %}
+const {{ name }} = "{{ value }}"
+{% endfor %}
