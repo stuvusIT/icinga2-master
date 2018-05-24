@@ -1,0 +1,79 @@
+---
+icinga2_user: nagios
+icinga2_group: nagios
+icinga2_constants: {}
+
+icinga2_configure_postgres: true
+icinga2_postgres_login_host: localhost
+icinga2_postgres_login_user: postgres
+icinga2_postgres_user: icinga2
+icinga2_postgres_database: icinga2
+
+# Features
+icinga2_features:
+  - checker
+  - command
+  - mainlog
+  - notification
+  - syslog
+icinga2_feature_api_bind: 0.0.0.0
+icinga2_feature_api_port: 5665
+icinga2_feature_api_accept_config: false
+icinga2_feature_api_accept_commands: false
+icinga2_feature_api_tlsmin: TLSv1.2
+icinga2_feature_checker_concurrent: 512
+icinga2_feature_command_path: /var/run/icinga2/cmd/icinga2.cmd
+icinga2_feature_idopgsql_host: localhost
+icinga2_feature_idopgsql_port: 5432
+icinga2_feature_idopgsql_user: icinga2
+icinga2_feature_idopgsql_password: icinga2
+icinga2_feature_idopgsql_database: icinga2
+icinga2_feature_idopgsql_instance_name: default
+icinga2_feature_idopgsql_ha: true
+icinga2_feature_idopgsql_failover_timeout: 60s
+icinga2_feature_idopgsql_cleanup: {}
+icinga2_feature_mainlog_severity: information
+icinga2_feature_mainlog_path: /var/log/icinga2/icinga2.log
+icinga2_feature_notification_ha: true
+icinga2_feature_syslog_severity: information
+
+# Objects in the master zone
+icinga2_api_master_users: {}
+icinga2_api_global_users: {}
+icinga2_host_dependencies: {}
+icinga2_service_dependencies: {}
+icinga2_host_downtimes: {}
+icinga2_service_downtimes: {}
+icinga2_event_commands: {}
+icinga2_forwarded_vars: {}
+icinga2_noagent_group: icinga2-noagent
+icinga2_host_groups: {}
+icinga2_notification_commands: {}
+icinga2_host_notifications: {}
+icinga2_service_notifications: {}
+icinga2_services: {}
+icinga2_service_groups: {}
+icinga2_timeperiods: {}
+icinga2_users: {}
+icinga2_user_groups: {}
+
+# Objects in the global zone
+icinga2_check_commands: {}
+
+icinga2_service_max_attempts: 3
+icinga2_service_volatile: false
+icinga2_service_check_interval: 5m
+icinga2_service_retry_interval: 5m
+icinga2_service_flapping: true
+icinga2_service_flapping_threshold_high: 30.0
+icinga2_service_flapping_threshold_low: 25.0
+icinga2_user_default_types:
+  - DowntimeStart
+  - DowntimeEnd
+  - DowntimeRemoved
+  - Custom
+  - Acknowledgement
+  - Problem
+  - Recovery
+  - FlappingStart
+  - FlappingEnd

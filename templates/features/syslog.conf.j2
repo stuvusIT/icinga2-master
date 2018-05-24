@@ -1,0 +1,5 @@
+// {{ ansible_managed }}
+
+object SyslogLogger "syslog" {
+	severity = "{{ icinga2_feature_syslog_severity }}"
+}

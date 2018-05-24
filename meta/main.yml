@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: Janne Heß
+  description: Set up a Icinga 2 master
+  company: stuvus (https://stuvus.uni-stuttgart.de)
+
+  license: CC-BY-SA
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+
+  galaxy_tags:
+    - icinga
+    - icinga2
+    - monitoring
+    - cluster
+    - master
+    - certificates
+
+dependencies: []

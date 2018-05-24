@@ -1,0 +1,49 @@
+// {{ ansible_managed }}
+
+{% for name,attrs in icinga2_notification_commands.iteritems() %}
+object NotificationCommand "{{ name }}" {
+	{#- You need to quote the string yourself, but otherwise
+	you wouldn't be able to use constants #}
+
+	command = [ {{ attrs.command }} ]
+
+	arguments += {
+	{% for k,v in (attrs.args | default({})).iteritems() -%}
+			"{{ k }}" = {
+				{% if v.value is defined -%}
+					value = "{{ v.value }}"
+				{% endif -%}
+
+				{% if v.setIf is defined -%}
+					set_if = "{{ v.setIf }}"
+				{% endif -%}
+
+				{% if v.order is defined -%}
+					order = {{ v.order }}
+				{% endif -%}
+
+				description = "{{ v.description }}"
+				required = {{ v.required | default(false) | lower }}
+				skip_key = {{ v.skipKey | default(false) | lower }}
+				repeat_key = {{ v.repeatKey | default(true) | lower }}
+			}
+		}
+	{% endfor %}
+	}
+
+	env = {
+		{% for k,v in (attrs.env | default({})).iteritems() -%}
+			{{ k }} = "{{ v }}"
+		{% endfor -%}
+	}
+
+	timeout = {{ attrs.timeout | default('1m') }}
+
+	vars += {
+		{% for k,v in (attrs.vars | default({})).iteritems() -%}
+			{{ k }} = "{{ v }}"
+		{% endfor -%}
+	}
+}
+
+{% endfor %}
