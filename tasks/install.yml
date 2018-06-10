@@ -1,0 +1,35 @@
+---
+- name: Add apt key
+  apt_key:
+    url: https://packages.icinga.com/icinga.key
+
+- name: Add apt repository
+  apt_repository:
+    repo: deb http://packages.icinga.com/ubuntu icinga-{{ ansible_distribution_release }} main
+    filename: icinga
+    update_cache: true
+
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - python-psycopg2
+    - icinga2
+    - icinga2-doc
+    - icinga2-ido-pgsql
+    - vim-icinga2
+
+- import_tasks: database.yml
+  when: icinga2_configure_postgres
+
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_group }}"
+    mode: 0770
+  with_items:
+    - /var/lib/icinga2
+    - /var/lib/icinga2/certs
+    - /var/lib/icinga2/ca

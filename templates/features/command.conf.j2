@@ -1,0 +1,7 @@
+// {{ ansible_managed }}
+
+library "compat"
+
+object ExternalCommandListener "command" {
+	command_path = "{{ icinga2_feature_command_path }}"
+}

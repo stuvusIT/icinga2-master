@@ -1,0 +1,6 @@
+// {{ ansible_managed }}
+
+object FileLogger "main-log" {
+	severity = "{{ icinga2_feature_mainlog_severity }}"
+	path = "{{ icinga2_feature_mainlog_path }}"
+}

@@ -1,0 +1,89 @@
+// {{ ansible_managed }}
+
+{% for name,service in icinga2_services.iteritems() %}
+{% if service.for is defined and service.for %}
+apply Service {% if not service.no_name | default(false) %}"{{ name }}" {% endif -%} for ({{ service.for_key | default('key') }} => {{ service.for_value | default('value') }} in {{ service.for }}) to Host {
+{% else %}
+apply Service "{{ name }}" to Host {
+{% endif %}
+	// Check attributes
+	volatile = {{ service.volatile | default(icinga2_service_volatile) | bool | lower }}
+	check_command = "{{ service.command }}"
+	max_check_attempts = {{ service.max_attempts | default(icinga2_service_max_attempts) }}
+	{% if service.check_period is defined -%}
+	check_period = {{ service.check_period }}
+	{% endif -%}
+	{% if service.check_timeout is defined -%}
+	check_timeout = {{ service.check_timeout }}
+	{% endif -%}
+	check_interval = {{ service.check_interval | default(icinga2_service_check_interval) }}
+	retry_interval = {{ service.retry_interval | default(icinga2_service_retry_interval) }}
+	{% if service.event_command is defined -%}
+	event_command = "{{ service.event_command }}"
+	{% endif -%}
+	{% if service.zone is defined -%}
+	zone = "{{ service.zone }}"
+	{% endif -%}
+	{% if service.command_endpoint is defined -%}
+	command_endpoint = "{{ service.command_endpoint }}"
+	{% elif service.remote | default(false) -%}
+	command_endpoint = "{{ my_zone }}"
+	{% else -%}
+	command_endpoint = host.vars.client_endpoint
+	{% endif -%}
+
+	// Flapping
+	enable_flapping = {{ service.flapping | default(icinga2_service_flapping) | bool | lower }}
+	flapping_threshold_high = {{ service.flapping_threshold_high | default(icinga2_service_flapping_threshold_high) }}
+	flapping_threshold_low = {{ service.flapping_threshold_low | default(icinga2_service_flapping_threshold_low) }}
+
+	// Meta
+	{% if service.description is defined -%}
+	display_name = "{{ service.description }}"
+	{% endif -%}
+	{% if service.groups is defined -%}
+	groups = [ "{{ service.groups | join('", "') }}" ]
+	{% endif -%}
+	{% if service.notes is defined -%}
+	notes = "{{ service.notes }}"
+	{% endif -%}
+	{% if service.notes_url is defined -%}
+	notes_url = "{{ service.notes_url }}"
+	{% endif -%}
+	{% if service.action_url is defined -%}
+	action_url = "{{ service.action_url }}"
+	{% endif -%}
+	{% if service.icon_image is defined -%}
+	icon_image = "{{ service.icon_image }}"
+	{% endif -%}
+	{% if service.icon_image_alt is defined -%}
+	icon_image_alt = "{{ service.icon_image_alt }}"
+	{% endif -%}
+	vars = {
+		{% for k,v in (service.vars | default({})).iteritems() -%}
+			{{ k }}  = "{{ v }}"
+		{% endfor -%}
+	}
+
+	{% for assign in service.assign -%}
+		assign where {{ assign }}
+	{% endfor -%}
+
+	{% for ignore in service.ignore | default([]) -%}
+		ignore where {{ ignore }}
+	{% endfor -%}
+
+	{% if not service.remote | default(false) -%}
+		ignore where !host.vars.client_endpoint
+	{% endif -%}
+}
+
+{% endfor %}
+
+{% for name in icinga2_services.values() | selectattr('groups', 'defined') | map(attribute='groups') | sum(start=[]) | unique %}
+object ServiceGroup "{{ name }}" {
+{% if name in icinga2_service_groups %}	display_name = "{{ icinga2_service_groups[name] }}"{% endif %}
+
+}
+
+{% endfor %}

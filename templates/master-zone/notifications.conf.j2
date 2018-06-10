@@ -1,0 +1,85 @@
+// {{ ansible_managed }}
+
+{% for name,notification in icinga2_host_notifications.iteritems() %}
+apply Notification "{{ name }}" to Host {
+	command = "{{ notification.command }}"
+	{% if notification.interval is defined -%}
+	interval = {{ notification.interval }}
+	{% endif -%}
+	{% if notification.users is defined -%}
+	users = [ "{{ notification.users | join('", "') }}" ]
+	{% endif -%}
+	{% if notification.user_groups is defined -%}
+	user_groups = [ "{{ notification.user_groups | join('", "') }}" ]
+	{% endif -%}
+	{% if notification.zone is defined -%}
+	zone = "{{ notification.zone }}"
+	{% endif -%}
+	{% if notification.types is defined -%}
+	types = [ {{ notification.types | join(', ') }} ]
+	{% endif -%}
+	{% if notification.states is defined -%}
+	states = [ {{ notification.states | join(', ') }} ]
+	{% endif -%}
+	{% if notification.period is defined -%}
+	period = "{{ notification.period }}"
+	{% endif -%}
+
+	vars = {
+		{% for k,v in (notification.vars | default({})).iteritems() -%}
+			{{ k }}  = "{{ v }}"
+		{% endfor -%}
+	}
+
+	{% for assign in notification.assign -%}
+		assign where {{ assign }}
+	{% endfor -%}
+
+	{% for ignore in notification.ignore | default([]) -%}
+		ignore where {{ ignore }}
+	{% endfor -%}
+}
+
+{% endfor %}
+
+{% for name,notification in icinga2_service_notifications.iteritems() %}
+apply Notification "{{ name }}" to Service {
+	command = "{{ notification.command }}"
+	{% if notification.interval is defined -%}
+	interval = {{ notification.interval }}
+	{% endif -%}
+	{% if notification.users is defined -%}
+	users = [ "{{ notification.users | join('", "') }}" ]
+	{% endif -%}
+	{% if notification.user_groups is defined -%}
+	user_groups = [ "{{ notification.user_groups | join('", "') }}" ]
+	{% endif -%}
+	{% if notification.zone is defined -%}
+	zone = "{{ notification.zone }}"
+	{% endif -%}
+	{% if notification.types is defined -%}
+	types = [ {{ notification.types | join(', ') }} ]
+	{% endif -%}
+	{% if notification.states is defined -%}
+	states = [ {{ notification.states | join(', ') }} ]
+	{% endif -%}
+	{% if notification.period is defined -%}
+	period = "{{ notification.period }}"
+	{% endif -%}
+
+	vars = {
+		{% for k,v in (notification.vars | default({})).iteritems() -%}
+			{{ k }}  = "{{ v }}"
+		{% endfor -%}
+	}
+
+	{% for assign in notification.assign -%}
+		assign where {{ assign }}
+	{% endfor -%}
+
+	{% for ignore in notification.ignore | default([]) -%}
+		ignore where {{ ignore }}
+	{% endfor -%}
+}
+
+{% endfor %}

@@ -1,0 +1,63 @@
+// {{ ansible_managed }}
+
+{% for name,dependency in icinga2_host_dependencies.iteritems() %}
+apply Dependency "{{ name }}" to Host {
+	parent_host_name = "{{ dependency.parent_host }}"
+	{% if dependency.parent_service is defined -%}
+		parent_service_name = "{{ dependency.parent_service }}"
+	{% endif -%}
+
+	disable_checks = {{ dependency.disable_checks | default(false) | bool | lower }}
+	disable_notifications = {{ dependency.disable_notifications | default(true) | bool | lower }}
+	ignore_soft_states = {{ dependency.ignore_soft_states | default(true) | bool | lower }}
+
+	{% if dependency.period is defined -%}
+		period = "{{ dependency.period }}"
+	{% endif -%}
+
+	{% if dependency.states is defined -%}
+	states = [ {{ dependency.states | join(', ') }} ]
+	{% endif %}
+
+	{% for assign in dependency.assign -%}
+		assign where {{ assign }}
+	{% endfor -%}
+
+	{% for ignore in dependency.ignore | default([]) -%}
+		ignore where {{ ignore }}
+	{% endfor %}
+
+}
+
+{% endfor %}
+
+{% for name,dependency in icinga2_service_dependencies.iteritems() %}
+apply Dependency "{{ name }}" to Service {
+	parent_host_name = "{{ dependency.parent_host }}"
+	{% if dependency.parent_service is defined -%}
+		parent_service_name = "{{ dependency.parent_service }}"
+	{% endif -%}
+
+	disable_checks = {{ dependency.disable_checks | default(false) | bool | lower }}
+	disable_notifications = {{ dependency.disable_notifications | default(true) | bool | lower }}
+	ignore_soft_states = {{ dependency.ignore_soft_states | default(true) | bool | lower }}
+
+	{% if dependency.period is defined -%}
+		period = "{{ dependency.period }}"
+	{% endif -%}
+
+	{% if dependency.states is defined -%}
+	states = [ {{ dependency.states | join(', ') }} ]
+	{% endif %}
+
+	{% for assign in dependency.assign -%}
+		assign where {{ assign }}
+	{% endfor -%}
+
+	{% for ignore in dependency.ignore | default([]) -%}
+		ignore where {{ ignore }}
+	{% endfor %}
+
+}
+
+{% endfor %}

@@ -1,0 +1,52 @@
+// {{ ansible_managed }}
+
+{% for name,attrs in icinga2_users.iteritems() %}
+object User "{{ name }}" {
+	{% if attrs.name is defined -%}
+		display_name = "{{ attrs.name }}"
+	{% endif -%}
+
+	{% if attrs.groups is defined -%}
+		groups = [ "{{ attrs.groups | join('", "') }}" ]
+	{% endif -%}
+
+	{% if attrs.email is defined -%}
+		email = "{{ attrs.email }}"
+	{% endif -%}
+
+	{% if attrs.pager is defined -%}
+		pager = "{{ attrs.pager }}"
+	{% endif -%}
+
+	{% if attrs.notifications is defined -%}
+		enable_notifications = {{ attrs.notifications | lower }}
+	{% endif -%}
+
+	{% if attrs.period is defined -%}
+		period = "{{ attrs.period }}"
+	{% endif -%}
+
+	{% if attrs.types | default(icinga2_user_default_types | default([])) | length > 0 -%}
+		types = [ {{ attrs.types | default(icinga2_user_default_types)| join(', ') }} ]
+	{% endif -%}
+
+	{% if attrs.states is defined -%}
+		states = [ {{ attrs.states | join(', ') }} ]
+	{% endif -%}
+
+	{% for k,v in (attrs.vars | default({})).iteritems() -%}
+		vars.{{ k }} = "{{ v }}"
+	{% endfor %}
+
+}
+
+{% endfor %}
+
+{% for name in icinga2_users.values() | selectattr('groups', 'defined') | map(attribute='groups') | sum(start=[]) | unique %}
+object UserGroup "{{ name }}" {
+{% if name in icinga2_user_groups %}	display_name = "{{ icinga2_user_groups[name] }}"{% endif %}
+
+}
+
+{% endfor %}
+

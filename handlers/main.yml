@@ -1,0 +1,10 @@
+---
+- name: Restart Icinga 2
+  service:
+    name: icinga2.service
+    state: restarted
+
+- name: Reload Icinga 2
+  service:
+    name: icinga2.service
+    state: reloaded

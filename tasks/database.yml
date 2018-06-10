@@ -1,0 +1,41 @@
+---
+- name: Create IDO user
+  postgresql_user:
+    name: "{{ icinga2_postgres_user }}"
+    role_attr_flags: LOGIN
+    # Connection to postgres
+    login_host: "{{ icinga2_postgres_login_host }}"
+    login_user: "{{ icinga2_postgres_login_user }}"
+    login_password: "{{ icinga2_postgres_login_password | default(omit) }}"
+
+- name: Create IDO database
+  postgresql_db:
+    name: "{{ icinga2_postgres_database }}"
+    owner: "{{ icinga2_postgres_user }}"
+    # Connection to postgres
+    login_host: "{{ icinga2_postgres_login_host }}"
+    login_user: "{{ icinga2_postgres_login_user }}"
+    login_password: "{{ icinga2_postgres_login_password | default(omit) }}"
+
+- name: Check if IDO schema is already imported
+  command: >
+    psql -H "{{ icinga2_postgres_login_host }}"
+    -U "{{ icinga2_postgres_user }}"
+    -d "{{ icinga2_postgres_database }}"
+    -c "select * from icinga_dbversion"
+  environment:
+    PGPASSWORD: "{{ icinga2_postgres_password | default(omit) }}"
+  register: ido_imported
+  failed_when: false
+  changed_when: false
+
+- name: Import IDO schema
+  command: >
+    psql -H "{{ icinga2_postgres_login_host }}"
+    -U "{{ icinga2_postgres_user }}"
+    -d "{{ icinga2_postgres_database }}"
+    -f /usr/share/icinga2-ido-pgsql/schema/pgsql.sql
+  environment:
+    PGPASSWORD: "{{ icinga2_postgres_password | default(omit) }}"
+  notify: Restart Icinga 2
+  when: ido_imported.rc != 0

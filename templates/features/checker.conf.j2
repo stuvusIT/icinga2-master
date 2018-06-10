@@ -1,0 +1,7 @@
+// {{ ansible_managed }}
+
+library "checker"
+
+object CheckerComponent "checker" {
+	concurrent_checks = {{ icinga2_feature_checker_concurrent }}
+}

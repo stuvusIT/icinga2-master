@@ -1,0 +1,25 @@
+// {{ ansible_managed }}
+
+{% for name,config in icinga2_timeperiods.iteritems() %}
+object TimePeriod "{{ name }}" {
+{% if config.description is defined %}	display_name = "{{ config.description }}"{% endif %}
+
+	ranges = {
+		{% for day,duration in config.ranges.iteritems() -%}
+		"{{ day }}" = "{{ duration }}"
+		{% endfor -%}
+	}
+
+	prefer_includes = {{ config.prefer_includes | default(true) | bool | lower }}
+
+	{% if config.excludes is defined -%}
+		excludes = [ "{{ config.excludes | join('", "') }}" ]
+	{% endif -%}
+
+	{% if config.includes is defined -%}
+		includes = [ "{{ config.includes | join('", "') }}" ]
+	{% endif %}
+
+}
+
+{% endfor %}

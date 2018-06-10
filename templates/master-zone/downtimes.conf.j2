@@ -1,0 +1,55 @@
+// {{ ansible_managed }}
+
+{% for name,downtime in icinga2_host_downtimes.iteritems() %}
+apply ScheduledDowntime "{{ name }}" to Host {
+	author = "{{ downtime.author }}"
+	comment = "{{ downtime.description }}"
+	{% if downtime.duration is defined -%}
+	fixed = false
+	duration = {{ downtime.duration }}
+	{% endif %}
+
+	ranges = {
+		{% for day,duration in downtime.ranges.iteritems() -%}
+			"{{ day }}" = "{{ duration }}"
+		{% endfor -%}
+	}
+
+	{% for assign in downtime.assign -%}
+		assign where {{ assign }}
+	{% endfor -%}
+
+	{% for ignore in downtime.ignore | default([]) -%}
+		ignore where {{ ignore }}
+	{% endfor %}
+
+}
+
+{% endfor %}
+
+{% for name,downtime in icinga2_service_downtimes.iteritems() %}
+apply ScheduledDowntime "{{ name }}" to Service {
+	author = "{{ downtime.author }}"
+	comment = "{{ downtime.comment }}"
+	{% if downtime.duration is defined -%}
+	fixed = false
+	duration = {{ downtime.duration }}
+	{% endif %}
+
+	ranges = {
+		{% for day,duration in downtime.ranges.iteritems() -%}
+			"{{ day }}" = "{{ duration }}"
+		{% endfor -%}
+	}
+
+	{% for assign in downtime.assign -%}
+		assign where {{ assign }}
+	{% endfor -%}
+
+	{% for ignore in downtime.ignore | default([]) -%}
+		ignore where {{ ignore }}
+	{% endfor %}
+
+}
+
+{% endfor %}
