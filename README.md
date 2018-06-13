@@ -25,7 +25,7 @@ Descriptions can be given using the `icinga2_host_groups` dict.
 
 ## Requirements
 
-Ubuntu
+Ubuntu or Debian
 
 ## Role Variables
 
