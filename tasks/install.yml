@@ -5,7 +5,7 @@
 
 - name: Add apt repository
   apt_repository:
-    repo: deb http://packages.icinga.com/ubuntu icinga-{{ ansible_distribution_release }} main
+    repo: deb http://packages.icinga.com/{{ ansible_distribution | lower }} icinga-{{ ansible_distribution_release }} main
     filename: icinga
     update_cache: true
 
