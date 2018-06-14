@@ -37,6 +37,13 @@ icinga2_feature_mainlog_path: /var/log/icinga2/icinga2.log
 icinga2_feature_notification_ha: true
 icinga2_feature_syslog_severity: information
 
+# Host attributes
+icinga2_host_max_check_attempts: 3
+icinga2_host_check_interval: 1m
+icinga2_host_retry_interval: 30s
+icinga2_host_flapping_threshold_high: 30.0
+icinga2_host_flapping_threshold_low: 25.0
+
 # Objects in the master zone
 icinga2_api_master_users: {}
 icinga2_api_global_users: {}

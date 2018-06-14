@@ -8,10 +8,12 @@ object Host "{{ name }}" {
 	address = "{{ attrs['ansible_host'] }}"
 
 	// Check
-	max_check_attempts = 3
-	check_interval = 1m
-	retry_interval = 30s
+	max_check_attempts = {{ icinga2_host_max_check_attempts }}
+	check_interval = {{ icinga2_host_check_interval }}
+	retry_interval = {{ icinga2_host_retry_interval }}
 	enable_flapping = true
+	flapping_threshold_high = {{ icinga2_host_flapping_threshold_high }}
+	flapping_threshold_low = {{ icinga2_host_flapping_threshold_low }}
 
 	{% macro insert_var(var) -%}{#- Formats a variable for inserting into Icinga configuration -#}
 		{%- if var | type == "NoneType" -%}
