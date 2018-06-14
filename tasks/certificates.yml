@@ -12,7 +12,7 @@
 - name: Sign CSR
   command:
     cmd: icinga2 pki sign-csr --csr "/var/lib/icinga2/certs/{{ inventory_hostname }}.csr" --cert "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
-    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.csr"
+    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
 
 - name: Link CA certificate to proper location
   file:
