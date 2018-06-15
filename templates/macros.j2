@@ -1,0 +1,38 @@
+{% macro quote_str(str) -%}{#- Adds quotes to a string if it doesn't have the ':nq:' prefix -#}
+	{%- if (str | string).startswith(':nq:') -%}
+		{{ str[4:] }}
+	{%- else -%}
+		"{{ str | replace('\\', '\\\\') | replace('"', '\\"') | replace('\n', '\\n') }}"
+	{%- endif -%}
+{% endmacro -%}
+
+{% macro insert_var(var) -%}{#- Formats a variable for inserting into Icinga configuration -#}
+	{%- if var | type == "NoneType" -%}
+		{#- null -#}
+		null
+	{%- elif var | type == "bool" -%}
+		{#- bool -#}
+		{{ var | bool | lower }}
+	{%- elif var | type == "int" or var | type == "float" -%}
+		{#- numeric -#}
+		{{ var }}
+	{%- elif var | type == "list" -%}
+		{#- list -#}
+		[ {% for item in var %}{{ insert_var(item) }}, {# Note: trailing commas in lists are legal #}{% endfor %} ]
+	{%- elif var | type == "dict" -%}
+		{#- dict -#}
+		{ {% for k,v in var.iteritems() %}"{{ k }}" = {{ insert_var(v) }}, {# Note: trailing commas in dicts are legal #}{% endfor %} }
+	{%- elif var | type == "unicode" or var | type == "AnsibleUnsafeText" -%}
+		{#- string or duration -#}
+		{%- if var | regex_search("^[\\d\\.]*(ms|s|m|h|d)$") -%}
+			{#- duration -#}
+			/* Duration */ {{ var }}
+		{%- else -%}
+			{#- string -#}
+			{{ quote_str(var) }}
+		{%- endif -%}
+	{%- else -%}
+		{# unknown type #}
+		null /* Unknown type {{ var | type }} */
+	{%- endif -%}
+{% endmacro -%}

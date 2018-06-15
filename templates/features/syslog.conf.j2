@@ -1,5 +1,6 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 object SyslogLogger "syslog" {
-	severity = "{{ icinga2_feature_syslog_severity }}"
+	severity = {{ quote_str(icinga2_feature_syslog_severity) }}
 }

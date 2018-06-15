@@ -1,11 +1,12 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import insert_var, quote_str %}
 
 {% for name,attrs in hostvars.iteritems() %}
 object Host "{{ name }}" {
 	// Generic stuff
 	groups = [ "{{ attrs['group_names'] | join('", "') }}" ]
-	notes = "{{ attrs.description }}"
-	address = "{{ attrs['ansible_host'] }}"
+	notes = {{ quote_str(attrs.description) }}
+	address = {{ quote_str(attrs['ansible_host']) }}
 
 	// Check
 	max_check_attempts = {{ icinga2_host_max_check_attempts }}
@@ -14,37 +15,6 @@ object Host "{{ name }}" {
 	enable_flapping = true
 	flapping_threshold_high = {{ icinga2_host_flapping_threshold_high }}
 	flapping_threshold_low = {{ icinga2_host_flapping_threshold_low }}
-
-	{% macro insert_var(var) -%}{#- Formats a variable for inserting into Icinga configuration -#}
-		{%- if var | type == "NoneType" -%}
-			{#- null -#}
-			null
-		{%- elif var | type == "bool" -%}
-			{#- bool -#}
-			{{ var | bool | lower }}
-		{%- elif var | type == "int" or var | type == "float" -%}
-			{#- numeric -#}
-			{{ var }}
-		{%- elif var | type == "list" -%}
-			{#- list -#}
-			[ {% for item in var %}{{ insert_var(item) }}, {# Note: trailing commas in lists are legal #}{% endfor %} ]
-		{%- elif var | type == "dict" -%}
-			{#- dict -#}
-			{ {% for k,v in var.iteritems() %}"{{ k }}" = {{ insert_var(v) }}, {# Note: trailing commas in dicts are legal #}{% endfor %} }
-		{%- elif var | type == "unicode" or var | type == "AnsibleUnsafeText" -%}
-			{#- string or duration -#}
-			{%- if var | regex_search("^[\\d\\.]*(ms|s|m|h|d)$") -%}
-				{#- duration -#}
-				/* Duration */ {{ var }}
-			{%- else -%}
-				{#- string -#}
-				"{{ var | replace('\\', '\\\\') | replace('"', '\\"') | replace('\n', '\\n') }}"
-			{%- endif -%}
-		{%- else -%}
-			{# unknown type #}
-			null /* Unknown type {{ var | type }} */
-		{%- endif -%}
-	{% endmacro -%}
 
 	vars = {
 		{% for k,v in icinga2_forwarded_vars.iteritems() if v in attrs %}
@@ -61,7 +31,7 @@ object Host "{{ name }}" {
 	check_command = "hostalive"
 {% else %}
 {# This is just a client #}
-	check_command = "{{ icinga2_agent_check }}"
+	check_command = {{ quote_str(icinga2_agent_check) }}
 	vars.client_endpoint = "{{ name }}"
 {% endif %}
 }
@@ -70,7 +40,7 @@ object Host "{{ name }}" {
 
 {% for name in hostvars.values() | selectattr('group_names', 'defined') | map(attribute='group_names') | sum(start=[]) | unique %}
 object HostGroup "{{ name }}" {
-{% if name in icinga2_host_groups %}	display_name = "{{ icinga2_host_groups[name] }}"{% endif %}
+{% if name in icinga2_host_groups %}	display_name = {{ quote_str(icinga2_host_groups[name]) }}{% endif %}
 
 }
 

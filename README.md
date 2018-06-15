@@ -23,6 +23,9 @@ If not, the check specified by `icinga2_agent_check` is performed.
 All Ansible groups are automatically converted into Icinga 2 groups.
 Descriptions can be given using the `icinga2_host_groups` dict.
 
+Every string variable can optionally be prefixed with `:nq:` (no quotes).
+This causes the string quotes to be omitted, which can be used for the usage of constants and conditional statements.
+
 ## Requirements
 
 Ubuntu or Debian
@@ -110,8 +113,8 @@ Ubuntu or Debian
 
 | Name                    | Default / Mandatory | Description                                                                 |
 |:------------------------|:-------------------:|:----------------------------------------------------------------------------|
-| `parent_host_name`      | :heavy_check_mark:  | Name of the parent host                                                     |
-| `parent_service_name`   |                     | Name of the parent service. If omitted, the dependency is made to the  host |
+| `parent_host`           | :heavy_check_mark:  | Name of the parent host                                                     |
+| `parent_service`        |                     | Name of the parent service. If omitted, the dependency is made to the  host |
 | `disable_checks`        | `false`             | Disable child checks once parent checks fail                                |
 | `disable_notifications` | `true`              | Disable child notifications once parent checks fail                         |
 | `ignore_soft_states`    | `true`              | Ignore soft states on the parent                                            |

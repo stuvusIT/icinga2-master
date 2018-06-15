@@ -1,9 +1,10 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 {% for name,attrs in icinga2_users.iteritems() %}
-object User "{{ name }}" {
+object User {{ quote_str(name) }} {
 	{% if attrs.name is defined -%}
-		display_name = "{{ attrs.name }}"
+		display_name = {{ quote_str(attrs.name) }}
 	{% endif -%}
 
 	{% if attrs.groups is defined -%}
@@ -11,11 +12,11 @@ object User "{{ name }}" {
 	{% endif -%}
 
 	{% if attrs.email is defined -%}
-		email = "{{ attrs.email }}"
+		email = {{ quote_str(attrs.email) }}
 	{% endif -%}
 
 	{% if attrs.pager is defined -%}
-		pager = "{{ attrs.pager }}"
+		pager = {{ quote_str(attrs.pager) }}
 	{% endif -%}
 
 	{% if attrs.notifications is defined -%}
@@ -23,7 +24,7 @@ object User "{{ name }}" {
 	{% endif -%}
 
 	{% if attrs.period is defined -%}
-		period = "{{ attrs.period }}"
+		period = {{ quote_str(attrs.period) }}
 	{% endif -%}
 
 	{% if attrs.types | default(icinga2_user_default_types | default([])) | length > 0 -%}
@@ -35,7 +36,7 @@ object User "{{ name }}" {
 	{% endif -%}
 
 	{% for k,v in (attrs.vars | default({})).iteritems() -%}
-		vars.{{ k }} = "{{ v }}"
+		vars.{{ k }} = {{ quote_str(v) }}
 	{% endfor %}
 
 }
@@ -43,8 +44,8 @@ object User "{{ name }}" {
 {% endfor %}
 
 {% for name in icinga2_users.values() | selectattr('groups', 'defined') | map(attribute='groups') | sum(start=[]) | unique %}
-object UserGroup "{{ name }}" {
-{% if name in icinga2_user_groups %}	display_name = "{{ icinga2_user_groups[name] }}"{% endif %}
+object UserGroup {{ quote_str(name) }} {
+{% if name in icinga2_user_groups %}	display_name = {{ quote_str(icinga2_user_groups[name]) }}{% endif %}
 
 }
 

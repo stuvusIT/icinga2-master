@@ -1,4 +1,5 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
-const RunAsUser = "{{ icinga2_user }}"
-const RunAsGroup = "{{ icinga2_group }}"
+const RunAsUser = {{ quote_str(icinga2_user) }}
+const RunAsGroup = {{ quote_str(icinga2_group) }}
