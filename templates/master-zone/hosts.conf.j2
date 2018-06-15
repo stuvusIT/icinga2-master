@@ -45,8 +45,8 @@ object Host "{{ name }}" {
 	{% endmacro -%}
 
 	vars = {
-		{% for k,v in icinga2_forwarded_vars.iteritems() if v in attrs %}
-		{{- k }} = {{ insert_var(attrs[v]) }}
+		{% for k,v in icinga2_forwarded_vars.iteritems() if (attrs | json_query(v)) %}
+		{{- k }} = {{ insert_var(attrs | json_query(v)) }}
 		{% endfor -%}
 	}
 
