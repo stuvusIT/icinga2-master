@@ -1,17 +1,17 @@
 // {{ ansible_managed }}
 
 {% for name,attrs in api_users.iteritems() %}
-object ApiUser "{{ name }}" {
+object ApiUser {{ quote_str(name) }} {
 	{% if attrs.password is defined -%}
-		password = "{{ attrs.password }}"
+		password = {{ quote_str(attrs.password) }}
 	{% endif -%}
 
 	{% if attrs.passwordHash is defined -%}
-		password_hash = "{{ attrs.password_hash }}"
+		password_hash = {{ quote_str(attrs.password_hash) }}
 	{% endif -%}
 
 	{% if attrs.clientCn is defined -%}
-		client_cn = "{{ attrs.client_cn }}"
+		client_cn = {{ quote_str(attrs.client_cn) }}
 	{% endif -%}
 
 	{% if attrs.permissions is defined -%}

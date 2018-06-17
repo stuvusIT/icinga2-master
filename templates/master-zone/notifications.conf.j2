@@ -1,8 +1,9 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 {% for name,notification in icinga2_host_notifications.iteritems() %}
-apply Notification "{{ name }}" to Host {
-	command = "{{ notification.command }}"
+apply Notification {{ quote_str(name) }} to Host {
+	command = {{ quote_str(notification.command) }}
 	{% if notification.interval is defined -%}
 	interval = {{ notification.interval }}
 	{% endif -%}
@@ -13,7 +14,7 @@ apply Notification "{{ name }}" to Host {
 	user_groups = [ "{{ notification.user_groups | join('", "') }}" ]
 	{% endif -%}
 	{% if notification.zone is defined -%}
-	zone = "{{ notification.zone }}"
+	zone = {{ quote_str(notification.zone) }}
 	{% endif -%}
 	{% if notification.types is defined -%}
 	types = [ {{ notification.types | join(', ') }} ]
@@ -22,12 +23,12 @@ apply Notification "{{ name }}" to Host {
 	states = [ {{ notification.states | join(', ') }} ]
 	{% endif -%}
 	{% if notification.period is defined -%}
-	period = "{{ notification.period }}"
+	period = {{ quote_str(notification.period) }}
 	{% endif -%}
 
 	vars = {
 		{% for k,v in (notification.vars | default({})).iteritems() -%}
-			{{ k }}  = "{{ v }}"
+			{{ k }}  = {{ quote_str(v) }}
 		{% endfor -%}
 	}
 
@@ -43,8 +44,8 @@ apply Notification "{{ name }}" to Host {
 {% endfor %}
 
 {% for name,notification in icinga2_service_notifications.iteritems() %}
-apply Notification "{{ name }}" to Service {
-	command = "{{ notification.command }}"
+apply Notification {{ quote_str(name) }} to Service {
+	command = {{ quote_str(notification.command) }}
 	{% if notification.interval is defined -%}
 	interval = {{ notification.interval }}
 	{% endif -%}
@@ -55,7 +56,7 @@ apply Notification "{{ name }}" to Service {
 	user_groups = [ "{{ notification.user_groups | join('", "') }}" ]
 	{% endif -%}
 	{% if notification.zone is defined -%}
-	zone = "{{ notification.zone }}"
+	zone = {{ quote_str(notification.zone) }}
 	{% endif -%}
 	{% if notification.types is defined -%}
 	types = [ {{ notification.types | join(', ') }} ]
@@ -64,12 +65,12 @@ apply Notification "{{ name }}" to Service {
 	states = [ {{ notification.states | join(', ') }} ]
 	{% endif -%}
 	{% if notification.period is defined -%}
-	period = "{{ notification.period }}"
+	period = {{ quote_str(notification.period) }}
 	{% endif -%}
 
 	vars = {
 		{% for k,v in (notification.vars | default({})).iteritems() -%}
-			{{ k }}  = "{{ v }}"
+			{{ k }}  = {{ quote_str(v) }}
 		{% endfor -%}
 	}
 

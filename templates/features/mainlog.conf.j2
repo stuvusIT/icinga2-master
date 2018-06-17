@@ -1,6 +1,7 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 object FileLogger "main-log" {
-	severity = "{{ icinga2_feature_mainlog_severity }}"
-	path = "{{ icinga2_feature_mainlog_path }}"
+	severity = {{ quote_str(icinga2_feature_mainlog_severity) }}
+	path = {{ quote_str(icinga2_feature_mainlog_path) }}
 }

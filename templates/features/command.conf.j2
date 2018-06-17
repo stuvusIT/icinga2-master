@@ -1,7 +1,8 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 library "compat"
 
 object ExternalCommandListener "command" {
-	command_path = "{{ icinga2_feature_command_path }}"
+	command_path = {{ quote_str(icinga2_feature_command_path) }}
 }

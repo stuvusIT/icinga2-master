@@ -1,10 +1,11 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 {% for name,dependency in icinga2_host_dependencies.iteritems() %}
-apply Dependency "{{ name }}" to Host {
-	parent_host_name = "{{ dependency.parent_host }}"
+apply Dependency {{ quote_str(name) }} to Host {
+	parent_host_name = {{ quote_str(dependency.parent_host) }}
 	{% if dependency.parent_service is defined -%}
-		parent_service_name = "{{ dependency.parent_service }}"
+		parent_service_name = {{ quote_str(dependency.parent_service) }}
 	{% endif -%}
 
 	disable_checks = {{ dependency.disable_checks | default(false) | bool | lower }}
@@ -12,7 +13,7 @@ apply Dependency "{{ name }}" to Host {
 	ignore_soft_states = {{ dependency.ignore_soft_states | default(true) | bool | lower }}
 
 	{% if dependency.period is defined -%}
-		period = "{{ dependency.period }}"
+		period = {{ quote_str(dependency.period) }}
 	{% endif -%}
 
 	{% if dependency.states is defined -%}
@@ -32,10 +33,10 @@ apply Dependency "{{ name }}" to Host {
 {% endfor %}
 
 {% for name,dependency in icinga2_service_dependencies.iteritems() %}
-apply Dependency "{{ name }}" to Service {
+apply Dependency {{ quote_str(name) }} to Service {
 	parent_host_name = "{{ dependency.parent_host }}"
 	{% if dependency.parent_service is defined -%}
-		parent_service_name = "{{ dependency.parent_service }}"
+		parent_service_name = {{ quote_str(dependency.parent_service) }}
 	{% endif -%}
 
 	disable_checks = {{ dependency.disable_checks | default(false) | bool | lower }}
@@ -43,7 +44,7 @@ apply Dependency "{{ name }}" to Service {
 	ignore_soft_states = {{ dependency.ignore_soft_states | default(true) | bool | lower }}
 
 	{% if dependency.period is defined -%}
-		period = "{{ dependency.period }}"
+		period = {{ quote_str(dependency.period) }}
 	{% endif -%}
 
 	{% if dependency.states is defined -%}

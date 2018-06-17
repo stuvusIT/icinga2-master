@@ -1,9 +1,10 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 {% for name,downtime in icinga2_host_downtimes.iteritems() %}
-apply ScheduledDowntime "{{ name }}" to Host {
-	author = "{{ downtime.author }}"
-	comment = "{{ downtime.description }}"
+apply ScheduledDowntime {{ quote_str(name) }} to Host {
+	author = {{ quote_str(downtime.author) }}
+	comment = {{ quote_str(downtime.description) }}
 	{% if downtime.duration is defined -%}
 	fixed = false
 	duration = {{ downtime.duration }}
@@ -11,7 +12,7 @@ apply ScheduledDowntime "{{ name }}" to Host {
 
 	ranges = {
 		{% for day,duration in downtime.ranges.iteritems() -%}
-			"{{ day }}" = "{{ duration }}"
+			{{ quote_str(day) }} = {{ quote_str(duration) }}
 		{% endfor -%}
 	}
 
@@ -28,9 +29,9 @@ apply ScheduledDowntime "{{ name }}" to Host {
 {% endfor %}
 
 {% for name,downtime in icinga2_service_downtimes.iteritems() %}
-apply ScheduledDowntime "{{ name }}" to Service {
-	author = "{{ downtime.author }}"
-	comment = "{{ downtime.comment }}"
+apply ScheduledDowntime {{ quote_str(name) }} to Service {
+	author = {{ quote_str(downtime.author) }}
+	comment = {{ quote_str(downtime.comment) }}
 	{% if downtime.duration is defined -%}
 	fixed = false
 	duration = {{ downtime.duration }}
@@ -38,7 +39,7 @@ apply ScheduledDowntime "{{ name }}" to Service {
 
 	ranges = {
 		{% for day,duration in downtime.ranges.iteritems() -%}
-			"{{ day }}" = "{{ duration }}"
+			{{ quote_str(day) }} = {{ quote_str(duration) }}
 		{% endfor -%}
 	}
 

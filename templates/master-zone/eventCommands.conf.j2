@@ -1,7 +1,8 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 {% for name,attrs in icinga2_event_commands.iteritems() %}
-object EventCommand "{{ name }}" {
+object EventCommand {{ quote_str(name) }} {
 	{#- You need to quote the string yourself, but otherwise
 	you wouldn't be able to use constants #}
 
@@ -9,20 +10,20 @@ object EventCommand "{{ name }}" {
 
 	arguments += {
 		{% for k,v in (attrs.args | default({})).iteritems() -%}
-			"{{ k }}" = {
+			{{ quote_str(k) }} = {
 				{% if v.value is defined -%}
-					value = "{{ v.value }}"
+					value = {{ quote_str(v.value) }}
 				{% endif -%}
 
 				{% if v.setIf is defined -%}
-					set_if = "{{ v.set_if }}"
+					set_if = {{ quote_str(v.set_if) }}
 				{% endif -%}
 
 				{% if v.order is defined -%}
 					order = {{ v.order }}
 				{% endif -%}
 
-				description = "{{ v.description }}"
+				description = {{ quote_str(v.description) }}
 				required = {{ v.required | default(false) | lower }}
 				skip_key = {{ v.skipKey | default(false) | lower }}
 				repeat_key = {{ v.repeatKey | default(true) | lower }}
@@ -32,7 +33,7 @@ object EventCommand "{{ name }}" {
 
 	env = {
 		{% for k,v in (attrs.env | default({})).iteritems() -%}
-			{{ k }} = "{{ v }}"
+			{{ k }} = {{ quote_str(v) }}
 		{% endfor -%}
 	}
 
@@ -40,7 +41,7 @@ object EventCommand "{{ name }}" {
 
 	vars += {
 		{% for k,v in (attrs.vars | default({})).iteritems() -%}
-			{{ k }} = "{{ v }}"
+			{{ k }} = {{ quote_str(v) }}
 		{% endfor -%}
 	}
 }

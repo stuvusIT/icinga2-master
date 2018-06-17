@@ -1,14 +1,15 @@
 // {{ ansible_managed }}
+{% from "./macros.j2" import quote_str %}
 
 library "db_ido_pgsql"
 
 object IdoPgsqlConnection "ido-pgsql" {
-	host = "{{ icinga2_feature_idopgsql_host }}"
+	host = {{ quote_str(icinga2_feature_idopgsql_host) }}
 	port = {{ icinga2_feature_idopgsql_port }}
-	user = "{{ icinga2_feature_idopgsql_user }}"
-	password = "{{ icinga2_feature_idopgsql_password }}"
-	database = "{{ icinga2_feature_idopgsql_database }}"
-	instance_name = "{{ icinga2_feature_idopgsql_instance_name }}"
+	user = {{ quote_str(icinga2_feature_idopgsql_user) }}
+	password = {{ quote_str(icinga2_feature_idopgsql_password) }}
+	database = {{ quote_str(icinga2_feature_idopgsql_database) }}
+	instance_name = {{ quote_str(icinga2_feature_idopgsql_instance_name) }}
 	enable_ha = {{ icinga2_feature_idopgsql_ha | lower }}
 	failover_timeout = {{ icinga2_feature_idopgsql_failover_timeout }}
 	cleanup = {
