@@ -28,7 +28,7 @@ apply Service {{ quote_str(name) }} to Host {
 	{% if service.command_endpoint is defined -%}
 	command_endpoint = {{ quote_str(service.command_endpoint) }}
 	{% elif service.remote | default(false) -%}
-	command_endpoint = {{ quote_str(my_zone) }}
+	command_endpoint = {{ quote_str(ansible_hostname) }}
 	{% else -%}
 	command_endpoint = host.vars.client_endpoint
 	{% endif -%}
