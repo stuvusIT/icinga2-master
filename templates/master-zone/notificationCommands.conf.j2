@@ -1,5 +1,5 @@
 // {{ ansible_managed }}
-{% from "./macros.j2" import quote_str %}
+{% from "./macros.j2" import quote_str, insert_var %}
 
 {% for name,attrs in icinga2_notification_commands.iteritems() %}
 object NotificationCommand {{ quote_str(name) }} {
@@ -34,7 +34,7 @@ object NotificationCommand {{ quote_str(name) }} {
 
 	env = {
 		{% for k,v in (attrs.env | default({})).iteritems() -%}
-			{{ k }} = {{ quote_str(v) }}
+			{{ k }} = {{ insert_var(v) }}
 		{% endfor -%}
 	}
 
@@ -42,7 +42,7 @@ object NotificationCommand {{ quote_str(name) }} {
 
 	vars += {
 		{% for k,v in (attrs.vars | default({})).iteritems() -%}
-			{{ k }} = {{ quote_str(v) }}
+			{{ k }} = {{ insert_var(v) }}
 		{% endfor -%}
 	}
 }

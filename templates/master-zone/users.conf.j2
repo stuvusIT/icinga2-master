@@ -1,5 +1,5 @@
 // {{ ansible_managed }}
-{% from "./macros.j2" import quote_str %}
+{% from "./macros.j2" import quote_str, insert_var %}
 
 {% for name,attrs in icinga2_users.iteritems() %}
 object User {{ quote_str(name) }} {
@@ -36,7 +36,7 @@ object User {{ quote_str(name) }} {
 	{% endif -%}
 
 	{% for k,v in (attrs.vars | default({})).iteritems() -%}
-		vars.{{ k }} = {{ quote_str(v) }}
+		vars.{{ k }} = {{ insert_var(v) }}
 	{% endfor %}
 
 }

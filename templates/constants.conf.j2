@@ -1,5 +1,5 @@
 // {{ ansible_managed }}
-{% from "./macros.j2" import quote_str %}
+{% from "./macros.j2" import quote_str, insert_var %}
 
 const NodeName = "{{ inventory_hostname }}"
 {% if icinga2_feature_api_salt is defined %}
@@ -7,5 +7,5 @@ const TicketSalt = {{ quote_str(icinga2_feature_api_salt) }}
 {% endif %}
 
 {% for name,value in icinga2_constants.iteritems() %}
-const {{ name }} = {{ quote_str(value) }}
+const {{ name }} = {{ insert_var(value) }}
 {% endfor %}
