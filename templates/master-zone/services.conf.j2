@@ -1,5 +1,5 @@
 // {{ ansible_managed }}
-{% from "./macros.j2" import quote_str %}
+{% from "./macros.j2" import quote_str, insert_var %}
 
 {% for name,service in icinga2_services.iteritems() %}
 {% if service.for is defined and service.for %}
@@ -62,7 +62,7 @@ apply Service {{ quote_str(name) }} to Host {
 	{% endif -%}
 	vars = {
 		{% for k,v in (service.vars | default({})).iteritems() -%}
-			{{ k }}  = {{ quote_str(v) }}
+			{{ k }}  = {{ insert_var(v) }}
 		{% endfor -%}
 	}
 
