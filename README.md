@@ -141,6 +141,7 @@ Ubuntu or Debian
 | `command` | :heavy_check_mark:  | Command to execute. You need to quote this string yourself, so you can use variables, e.g. `"PluginDir + \"my_check\""` |
 | `args`    | `{}`                | Argument-Values dict to pass to the command. See below for valid values                                                 |
 | `env`     |                     | Dict to append to the environment of the executed command                                                               |
+| `sudo`    | `false`             | Prefix this command with `sudo`                                                                                         |
 | `timeout` | `1m`                | Timeout of the command                                                                                                  |
 | `vars`    | `{}`                | Variables to pass to the command                                                                                        |
 

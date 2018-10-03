@@ -6,7 +6,7 @@ object CheckCommand {{ quote_str(name) }} {
 	{#- You need to quote the string yourself, but otherwise
 	you wouldn't be able to use constants #}
 
-	command = [ {{ attrs.command }} ]
+	command = [ {% if attrs.sudo | default(false) %}"sudo", {% endif %}{{ attrs.command }} ]
 
 	arguments += {
 	{% for k,v in (attrs.args | default({})).iteritems() -%}
