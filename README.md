@@ -150,7 +150,7 @@ Ubuntu or Debian
 | Name          | Default / Mandatory | Description                                                                         |
 |:--------------|:-------------------:|:------------------------------------------------------------------------------------|
 | `value`       |                     | Value of this argument                                                              |
-| `set_if`      |                     | Set this argument if the condition evaulates to true                                |
+| `setIf`       |                     | Set this argument if the condition evaulates to true                                |
 | `order`       |                     | Order specification of this argument                                                |
 | `description` | :heavy_check_mark:  | Description of this argument                                                        |
 | `required`    | `false`             | Whether this argument is required                                                   |
