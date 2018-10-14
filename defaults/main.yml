@@ -2,6 +2,7 @@
 icinga2_user: nagios
 icinga2_group: nagios
 icinga2_constants: {}
+icinga2_monitoring_package: monitoring-plugins
 
 icinga2_configure_postgres: true
 icinga2_postgres_login_host: localhost
