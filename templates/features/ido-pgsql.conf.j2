@@ -13,7 +13,7 @@ object IdoPgsqlConnection "ido-pgsql" {
 	enable_ha = {{ icinga2_feature_idopgsql_ha | lower }}
 	failover_timeout = {{ icinga2_feature_idopgsql_failover_timeout }}
 	cleanup = {
-		{% for item,age in icinga2_feature_idopgsql_cleanup.iteritems() -%}
+		{% for item,age in icinga2_feature_idopgsql_cleanup.items() -%}
 			{{ item }} = {{ age }}
 		{% endfor %}
 	}

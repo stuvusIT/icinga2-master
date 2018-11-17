@@ -11,14 +11,13 @@
 
 - name: Install required packages
   apt:
-    name: "{{ item }}"
-  with_items:
-    - python-psycopg2
-    - icinga2
-    - icinga2-doc
-    - icinga2-ido-pgsql
-    - vim-icinga2
-    - "{{ icinga2_monitoring_package }}"
+    name:
+      - python-psycopg2
+      - icinga2
+      - icinga2-doc
+      - icinga2-ido-pgsql
+      - vim-icinga2
+      - "{{ icinga2_monitoring_package }}"
 
 - import_tasks: database.yml
   when: icinga2_configure_postgres

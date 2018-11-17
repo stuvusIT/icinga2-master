@@ -21,8 +21,8 @@
 		[ {% for item in var %}{{ insert_var(item) }}, {# Note: trailing commas in lists are legal #}{% endfor %} ]
 	{%- elif var | type == "dict" -%}
 		{#- dict -#}
-		{ {% for k,v in var.iteritems() %}"{{ k }}" = {{ insert_var(v) }}, {# Note: trailing commas in dicts are legal #}{% endfor %} }
-	{%- elif var | type == "unicode" or var | type == "AnsibleUnsafeText" -%}
+		{ {% for k,v in var.items() %}"{{ k }}" = {{ insert_var(v) }}, {# Note: trailing commas in dicts are legal #}{% endfor %} }
+	{%- elif var | type == "unicode" or var | type == "AnsibleUnsafeText" or var | type == "str" -%}
 		{#- string or duration -#}
 		{%- if var | regex_search("^[\\d\\.]*(ms|s|m|h|d)$") -%}
 			{#- duration -#}
