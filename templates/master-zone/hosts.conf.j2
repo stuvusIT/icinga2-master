@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 {% from "./macros.j2" import insert_var, quote_str %}
 
-{% for name,attrs in hostvars.iteritems() %}
+{% for name,attrs in hostvars.items() %}
 object Host "{{ name }}" {
 	// Generic stuff
 	groups = [ "{{ attrs['group_names'] | join('", "') }}" ]
@@ -17,7 +17,7 @@ object Host "{{ name }}" {
 	flapping_threshold_low = {{ icinga2_host_flapping_threshold_low }}
 
 	vars = {
-		{% for k,v in icinga2_forwarded_vars.iteritems() if (attrs | json_query(v)) %}
+		{% for k,v in icinga2_forwarded_vars.items() if (attrs | json_query(v)) %}
 		{{- k }} = {{ insert_var(attrs | json_query(v)) }}
 		{% endfor -%}
 	}

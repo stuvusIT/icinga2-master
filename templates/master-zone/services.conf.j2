@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 {% from "./macros.j2" import quote_str, insert_var %}
 
-{% for name,service in icinga2_services.iteritems() %}
+{% for name,service in icinga2_services.items() %}
 {% if service.for is defined and service.for %}
 apply Service {% if not service.no_name | default(false) %}{{ quote_str(name) }} {% endif -%} for ({{ service.for_key | default('key') }} => {{ service.for_value | default('value') }} in {{ service.for }}) to Host {
 {% else %}
@@ -61,7 +61,7 @@ apply Service {{ quote_str(name) }} to Host {
 	icon_image_alt = {{ quote_str(service.icon_image_alt) }}
 	{% endif -%}
 	vars = {
-		{% for k,v in (service.vars | default({})).iteritems() -%}
+		{% for k,v in (service.vars | default({})).items() -%}
 			{{ k }}  = {{ insert_var(v) }}
 		{% endfor -%}
 	}

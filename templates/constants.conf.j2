@@ -6,6 +6,6 @@ const NodeName = "{{ inventory_hostname }}"
 const TicketSalt = {{ quote_str(icinga2_feature_api_salt) }}
 {% endif %}
 
-{% for name,value in icinga2_constants.iteritems() %}
+{% for name,value in icinga2_constants.items() %}
 const {{ name }} = {{ insert_var(value) }}
 {% endfor %}

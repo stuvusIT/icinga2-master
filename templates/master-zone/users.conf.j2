@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 {% from "./macros.j2" import quote_str, insert_var %}
 
-{% for name,attrs in icinga2_users.iteritems() %}
+{% for name,attrs in icinga2_users.items() %}
 object User {{ quote_str(name) }} {
 	{% if attrs.name is defined -%}
 		display_name = {{ quote_str(attrs.name) }}
@@ -35,7 +35,7 @@ object User {{ quote_str(name) }} {
 		states = [ {{ attrs.states | join(', ') }} ]
 	{% endif -%}
 
-	{% for k,v in (attrs.vars | default({})).iteritems() -%}
+	{% for k,v in (attrs.vars | default({})).items() -%}
 		vars.{{ k }} = {{ insert_var(v) }}
 	{% endfor %}
 

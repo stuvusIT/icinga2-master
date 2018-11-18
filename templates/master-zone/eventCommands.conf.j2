@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 {% from "./macros.j2" import quote_str, insert_var %}
 
-{% for name,attrs in icinga2_event_commands.iteritems() %}
+{% for name,attrs in icinga2_event_commands.items() %}
 object EventCommand {{ quote_str(name) }} {
 	{#- You need to quote the string yourself, but otherwise
 	you wouldn't be able to use constants #}
@@ -9,7 +9,7 @@ object EventCommand {{ quote_str(name) }} {
 	command = [ {{ attrs.command }} ]
 
 	arguments += {
-		{% for k,v in (attrs.args | default({})).iteritems() -%}
+		{% for k,v in (attrs.args | default({})).items() -%}
 			{{ quote_str(k) }} = {
 				{% if v.value is defined -%}
 					value = {{ quote_str(v.value) }}
@@ -32,7 +32,7 @@ object EventCommand {{ quote_str(name) }} {
 	}
 
 	env = {
-		{% for k,v in (attrs.env | default({})).iteritems() -%}
+		{% for k,v in (attrs.env | default({})).items() -%}
 			{{ k }} = {{ insert_var(v) }}
 		{% endfor -%}
 	}
@@ -40,7 +40,7 @@ object EventCommand {{ quote_str(name) }} {
 	timeout = {{ attrs.timeout | default('1m') }}
 
 	vars += {
-		{% for k,v in (attrs.vars | default({})).iteritems() -%}
+		{% for k,v in (attrs.vars | default({})).items() -%}
 			{{ k }} = {{ insert_var(v) }}
 		{% endfor -%}
 	}

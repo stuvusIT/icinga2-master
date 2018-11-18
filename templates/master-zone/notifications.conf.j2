@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 {% from "./macros.j2" import quote_str, insert_var %}
 
-{% for name,notification in icinga2_host_notifications.iteritems() %}
+{% for name,notification in icinga2_host_notifications.items() %}
 apply Notification {{ quote_str(name) }} to Host {
 	command = {{ quote_str(notification.command) }}
 	{% if notification.interval is defined -%}
@@ -27,7 +27,7 @@ apply Notification {{ quote_str(name) }} to Host {
 	{% endif -%}
 
 	vars = {
-		{% for k,v in (notification.vars | default({})).iteritems() -%}
+		{% for k,v in (notification.vars | default({})).items() -%}
 			{{ k }}  = {{ insert_var(v) }}
 		{% endfor -%}
 	}
@@ -43,7 +43,7 @@ apply Notification {{ quote_str(name) }} to Host {
 
 {% endfor %}
 
-{% for name,notification in icinga2_service_notifications.iteritems() %}
+{% for name,notification in icinga2_service_notifications.items() %}
 apply Notification {{ quote_str(name) }} to Service {
 	command = {{ quote_str(notification.command) }}
 	{% if notification.interval is defined -%}
@@ -69,7 +69,7 @@ apply Notification {{ quote_str(name) }} to Service {
 	{% endif -%}
 
 	vars = {
-		{% for k,v in (notification.vars | default({})).iteritems() -%}
+		{% for k,v in (notification.vars | default({})).items() -%}
 			{{ k }}  = {{ insert_var(v) }}
 		{% endfor -%}
 	}

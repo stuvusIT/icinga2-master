@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 {% from "./macros.j2" import quote_str %}
 
-{% for name,attrs in api_users.iteritems() %}
+{% for name,attrs in api_users.items() %}
 object ApiUser {{ quote_str(name) }} {
 	{% if attrs.password is defined -%}
 		password = {{ quote_str(attrs.password) }}

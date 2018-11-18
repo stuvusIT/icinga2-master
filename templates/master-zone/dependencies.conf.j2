@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 {% from "./macros.j2" import quote_str %}
 
-{% for name,dependency in icinga2_host_dependencies.iteritems() %}
+{% for name,dependency in icinga2_host_dependencies.items() %}
 apply Dependency {{ quote_str(name) }} to Host {
 	parent_host_name = {{ quote_str(dependency.parent_host) }}
 	{% if dependency.parent_service is defined -%}
@@ -32,7 +32,7 @@ apply Dependency {{ quote_str(name) }} to Host {
 
 {% endfor %}
 
-{% for name,dependency in icinga2_service_dependencies.iteritems() %}
+{% for name,dependency in icinga2_service_dependencies.items() %}
 apply Dependency {{ quote_str(name) }} to Service {
 	parent_host_name = "{{ dependency.parent_host }}"
 	{% if dependency.parent_service is defined -%}
