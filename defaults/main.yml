@@ -39,6 +39,7 @@ icinga2_feature_notification_ha: true
 icinga2_feature_syslog_severity: information
 
 # Host attributes
+icinga2_host_filter: null
 icinga2_host_max_check_attempts: 3
 icinga2_host_check_interval: 1m
 icinga2_host_retry_interval: 30s

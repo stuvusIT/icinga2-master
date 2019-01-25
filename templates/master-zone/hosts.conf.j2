@@ -1,5 +1,6 @@
 // {{ ansible_managed }}
 {% from "./macros.j2" import insert_var, quote_str %}
+{% set hostvars = (dict(hostvars) | dict2items | json_query('[]' if (icinga2_host_filter == None) else '[?' + icinga2_host_filter + ']') | items2dict) %}
 
 {% for name,attrs in hostvars.items() %}
 object Host "{{ name }}" {
