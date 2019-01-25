@@ -66,6 +66,7 @@ Ubuntu or Debian
 | `icinga2_feature_mainlog_path`              | `/var/log/icinga2/icinga2.log`                        | Path to the mainlog                                                                                                      |
 | `icinga2_feature_notification_ha`           | `true`                                                | Whether to enable notification HA                                                                                        |
 | `icinga2_feature_syslog_severity`           | `information`                                         | Minimum log level for messages to be logged to syslog                                                                    |
+| `icinga2_host_filter`                       |                                                       | JMESPath filter to apply to all hosts (hostname is `key`, configuration is `value`)                                      |
 | `icinga2_host_max_check_attempts`           | `3`                                                   | Maximum amonut of check attempts on a host                                                                               |
 | `icinga2_host_check_interval`               | `1m`                                                  | Check interval for hosts                                                                                                 |
 | `icinga2_host_retry_interval`               | `30s`                                                 | Check interval for hosts wen in a `SOFT` state                                                                           |
@@ -239,6 +240,7 @@ Ubuntu or Debian
     - role: icinga2-master
       icinga2_feature_api_salt: ieChahchaecei8zai1va
       icinga2_feature_idopgsql_ha: false
+      icinga2_host_filter: "value.functionality != 'testing'"
       icinga2_constants:
         PluginDir: /var/lib/nagios/plugins
       icinga2_users:
